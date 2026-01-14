@@ -1,13 +1,14 @@
 package ar.org.sumame.api.domain.repository;
 
 import ar.org.sumame.api.domain.entity.Empresa;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
+public interface EmpresaRepository {
+
+    Empresa save(Empresa empresa);
+
+    Optional<Empresa> findById(Long id);
 
     Optional<Empresa> findByUsuarioId(Long usuarioId);
-
-    boolean existsByCuit(String cuit);
 }

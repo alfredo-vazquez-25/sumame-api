@@ -31,6 +31,13 @@ public class Postulacion extends BaseEntity {
     public Postulacion() {
     }
 
+    public Postulacion(OfertaLaboral oferta, Postulante postulante) {
+        this.oferta = oferta;
+        this.postulante = postulante;
+        this.estado = EstadoPostulacion.ENVIADA;
+        this.fechaPostulacion = LocalDate.now();
+    }
+
     public Postulante getPostulante() {
         return postulante;
     }

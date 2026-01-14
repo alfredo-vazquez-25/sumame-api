@@ -1,14 +1,15 @@
 package ar.org.sumame.api.application.service;
 
-import ar.org.sumame.api.domain.entity.OfertaLaboral;
+import ar.org.sumame.api.application.dto.oferta.OfertaLaboralCreateRequest;
+import ar.org.sumame.api.application.dto.oferta.OfertaLaboralResponse;
 
 import java.util.List;
 
 public interface OfertaLaboralService {
 
-    OfertaLaboral crearOferta(OfertaLaboral oferta);
+    OfertaLaboralResponse crearOferta(Long usuarioId, OfertaLaboralCreateRequest request);
 
-    List<OfertaLaboral> listarTodas();
+    List<OfertaLaboralResponse> listarTodas();
 
-    OfertaLaboral buscarPorId(Long ofertaId);
+    OfertaLaboralResponse buscarPorId(Long id);
 }

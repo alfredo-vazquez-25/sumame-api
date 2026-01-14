@@ -1,4 +1,4 @@
-package ar.org.sumame.api.application.service.impl;
+package ar.org.sumame.api.application.impl;
 
 import ar.org.sumame.api.application.service.UsuarioService;
 import ar.org.sumame.api.domain.entity.Usuario;

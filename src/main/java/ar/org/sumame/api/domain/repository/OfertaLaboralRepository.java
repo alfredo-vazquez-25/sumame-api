@@ -1,13 +1,12 @@
 package ar.org.sumame.api.domain.repository;
 
 import ar.org.sumame.api.domain.entity.OfertaLaboral;
-import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface OfertaLaboralRepository extends JpaRepository<OfertaLaboral, Long> {
-
-    List<OfertaLaboral> findByActivaTrue();
-
-    List<OfertaLaboral> findByEmpresaId(Long empresaId);
+public interface OfertaLaboralRepository {
+    OfertaLaboral save(OfertaLaboral oferta);
+    Optional<OfertaLaboral> findById(Long id);
+    List<OfertaLaboral> findAll();
 }

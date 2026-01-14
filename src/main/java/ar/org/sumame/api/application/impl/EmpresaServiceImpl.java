@@ -1,4 +1,4 @@
-package ar.org.sumame.api.application.service.impl;
+package ar.org.sumame.api.application.impl;
 
 import ar.org.sumame.api.application.service.EmpresaService;
 import ar.org.sumame.api.domain.entity.Empresa;
@@ -24,6 +24,10 @@ public class EmpresaServiceImpl implements EmpresaService {
     @Override
     public Empresa obtenerPorUsuario(Long usuarioId) {
         return empresaRepository.findByUsuarioId(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Empresa no encontrada"));
+                .orElseThrow(() ->
+                        new RuntimeException("Empresa no encontrada para el usuario " + usuarioId)
+                );
     }
 }
+
+

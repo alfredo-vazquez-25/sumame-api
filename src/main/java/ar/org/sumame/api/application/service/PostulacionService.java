@@ -6,9 +6,8 @@ import ar.org.sumame.api.domain.enums.EstadoPostulacion;
 import java.util.List;
 
 public interface PostulacionService {
-    Postulacion postular(Long postulanteId, Long ofertaId);
 
-    List<Postulacion> listarPorPostulante(Long postulanteId);
+    void postular(Long ofertaId, Long usuarioId);
 
-    Postulacion cambiarEstado(Long postulacionId, EstadoPostulacion estado);
+    List<Postulacion> listarPorPostulante(Long usuarioId);
 }

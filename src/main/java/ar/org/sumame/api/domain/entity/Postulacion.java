@@ -23,7 +23,7 @@ public class Postulacion extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private EstadoPostulacion estado = EstadoPostulacion.ENVIADA;
+    private EstadoPostulacion estado = EstadoPostulacion.POSTULADA;
 
     @Column(nullable = false)
     private LocalDate fechaPostulacion = LocalDate.now();
@@ -34,7 +34,7 @@ public class Postulacion extends BaseEntity {
     public Postulacion(OfertaLaboral oferta, Postulante postulante) {
         this.oferta = oferta;
         this.postulante = postulante;
-        this.estado = EstadoPostulacion.ENVIADA;
+        this.estado = EstadoPostulacion.POSTULADA;
         this.fechaPostulacion = LocalDate.now();
     }
 

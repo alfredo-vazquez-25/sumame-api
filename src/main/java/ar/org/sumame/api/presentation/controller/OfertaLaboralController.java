@@ -6,6 +6,7 @@ import ar.org.sumame.api.application.service.OfertaLaboralService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +21,13 @@ public class OfertaLaboralController {
         this.ofertaLaboralService = ofertaLaboralService;
     }
 
+    @PreAuthorize("hasRole('RECLUTADOR')")
     @PostMapping
-    public ResponseEntity<OfertaLaboralResponse> crear(
-            @RequestParam Long usuarioId,
-            @Valid @RequestBody OfertaLaboralCreateRequest request) {
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(ofertaLaboralService.crearOferta(usuarioId, request));
+    public OfertaLaboralResponse crearOferta(
+            @RequestBody OfertaLaboralCreateRequest request
+    ) {
+        System.out.println(">>> ENTRO AL CONTROLLER <<<");
+        return ofertaLaboralService.crearOferta(request);
     }
 
     @GetMapping

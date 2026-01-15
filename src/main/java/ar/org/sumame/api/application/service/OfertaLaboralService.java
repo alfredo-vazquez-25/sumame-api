@@ -6,10 +6,7 @@ import ar.org.sumame.api.application.dto.oferta.OfertaLaboralResponse;
 import java.util.List;
 
 public interface OfertaLaboralService {
-
-    OfertaLaboralResponse crearOferta(Long usuarioId, OfertaLaboralCreateRequest request);
-
+    OfertaLaboralResponse crearOferta(OfertaLaboralCreateRequest request);
     List<OfertaLaboralResponse> listarTodas();
-
     OfertaLaboralResponse buscarPorId(Long id);
 }

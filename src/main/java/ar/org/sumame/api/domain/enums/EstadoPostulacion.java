@@ -1,8 +1,8 @@
 package ar.org.sumame.api.domain.enums;
 
 public enum EstadoPostulacion {
-    ENVIADA,
+    POSTULADA,
     EN_REVISION,
     RECHAZADA,
-    ACEPTADA
+    SELECCIONADA
 }

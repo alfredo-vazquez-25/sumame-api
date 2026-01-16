@@ -2,14 +2,15 @@ package ar.org.sumame.api.presentation.controller;
 
 import ar.org.sumame.api.application.dto.oferta.OfertaLaboralCreateRequest;
 import ar.org.sumame.api.application.dto.oferta.OfertaLaboralResponse;
+import ar.org.sumame.api.application.exception.ForbiddenException;
 import ar.org.sumame.api.application.service.OfertaLaboralService;
+import ar.org.sumame.api.domain.enums.RolUsuario;
+import ar.org.sumame.api.security.CustomUserDetails;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/ofertas")
@@ -24,19 +25,26 @@ public class OfertaLaboralController {
     @PreAuthorize("hasRole('RECLUTADOR')")
     @PostMapping
     public OfertaLaboralResponse crearOferta(
-            @RequestBody OfertaLaboralCreateRequest request
+            @Valid @RequestBody OfertaLaboralCreateRequest request
     ) {
-        System.out.println(">>> ENTRO AL CONTROLLER <<<");
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new ForbiddenException("Usuario no autenticado");
+        }
+
+        // DEV: principal es String
+        // PROD: principal es CustomUserDetails
+        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
+
+            var rol = userDetails.getUsuario().getRol().getNombre();
+
+            if (rol != RolUsuario.RECLUTADOR) {
+                throw new ForbiddenException("El usuario no tiene rol RECLUTADOR");
+            }
+        }
+
         return ofertaLaboralService.crearOferta(request);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<OfertaLaboralResponse>> listar() {
-        return ResponseEntity.ok(ofertaLaboralService.listarTodas());
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<OfertaLaboralResponse> obtener(@PathVariable Long id) {
-        return ResponseEntity.ok(ofertaLaboralService.buscarPorId(id));
     }
 }

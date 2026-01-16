@@ -18,6 +18,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 @EnableMethodSecurity
 public class SecurityConfig {
 
+    // ===== DEV =====
+
     @Bean
     @Profile("dev")
     public DevAuthenticationFilter devAuthenticationFilter() {
@@ -25,7 +27,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(
+    @Profile("dev")
+    public SecurityFilterChain devFilterChain(
             HttpSecurity http,
             DevAuthenticationFilter devAuthenticationFilter
     ) throws Exception {
@@ -38,15 +41,46 @@ public class SecurityConfig {
                 .addFilterBefore(
                         devAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
+                )
+                .sessionManagement(sess ->
+                        sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
         return http.build();
     }
 
+    // ===== JWT / PROD =====
+
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration config
+    @Profile("!dev")
+    public JwtAuthenticationFilter jwtAuthenticationFilter(
+            JwtService jwtService,
+            CustomUserDetailsService userDetailsService
+    ) {
+        return new JwtAuthenticationFilter(jwtService, userDetailsService);
+    }
+
+    @Bean
+    @Profile("!dev")
+    public SecurityFilterChain jwtFilterChain(
+            HttpSecurity http,
+            JwtAuthenticationFilter jwtAuthenticationFilter
     ) throws Exception {
-        return config.getAuthenticationManager();
+
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(
+                        jwtAuthenticationFilter,
+                        UsernamePasswordAuthenticationFilter.class
+                )
+                .sessionManagement(sess ->
+                        sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
+
+        return http.build();
     }
 }

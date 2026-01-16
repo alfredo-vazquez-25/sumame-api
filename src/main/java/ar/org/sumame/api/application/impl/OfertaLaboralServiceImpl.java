@@ -47,6 +47,7 @@ public class OfertaLaboralServiceImpl implements OfertaLaboralService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         System.out.println("AUTH = " + auth);
+        System.out.println("PRINCIPAL = " + auth.getPrincipal());
         System.out.println("AUTHORITIES = " + auth.getAuthorities());
 
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();

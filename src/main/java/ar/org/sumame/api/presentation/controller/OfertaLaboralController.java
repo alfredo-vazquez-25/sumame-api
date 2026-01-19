@@ -6,6 +6,7 @@ import ar.org.sumame.api.application.exception.ForbiddenException;
 import ar.org.sumame.api.application.service.OfertaLaboralService;
 import ar.org.sumame.api.domain.enums.RolUsuario;
 import ar.org.sumame.api.security.CustomUserDetails;
+import ar.org.sumame.api.security.util.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -23,26 +24,14 @@ public class OfertaLaboralController {
     }
 
     @PreAuthorize("hasRole('RECLUTADOR')")
-    @PostMapping
+    @PostMapping("/api/ofertas")
     public OfertaLaboralResponse crearOferta(
-            @Valid @RequestBody OfertaLaboralCreateRequest request
+            @RequestBody OfertaLaboralCreateRequest request
     ) {
-        Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails user = SecurityUtils.getCurrentUser();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
-            throw new ForbiddenException("Usuario no autenticado");
-        }
-
-        // DEV: principal es String
-        // PROD: principal es CustomUserDetails
-        if (authentication.getPrincipal() instanceof CustomUserDetails userDetails) {
-
-            var rol = userDetails.getUsuario().getRol().getNombre();
-
-            if (rol != RolUsuario.RECLUTADOR) {
-                throw new ForbiddenException("El usuario no tiene rol RECLUTADOR");
-            }
+        if (user.getUsuario().getRol().getNombre() != RolUsuario.RECLUTADOR) {
+            throw new ForbiddenException("Rol inválido");
         }
 
         return ofertaLaboralService.crearOferta(request);

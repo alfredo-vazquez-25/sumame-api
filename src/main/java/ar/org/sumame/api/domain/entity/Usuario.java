@@ -20,14 +20,12 @@ public class Usuario extends BaseEntity {
     @JoinColumn(name = "rol_id", nullable = false)
     private Rol rol;
 
-    @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private Postulante postulante;
+    protected Usuario() {}
 
-    @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
-    private Empresa empresa;
-
-
-    public Usuario() {
+    public Usuario(String email, boolean activo, Rol rol) {
+        this.email = email;
+        this.activo = activo;
+        this.rol = rol;
     }
 
     public String getEmail() {

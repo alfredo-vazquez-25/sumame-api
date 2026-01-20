@@ -10,6 +10,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -39,7 +41,17 @@ public class AuthController {
         CustomUserDetails user =
                 (CustomUserDetails) authentication.getPrincipal();
 
-        String token = jwtService.generarToken(user.getUsername());
+        List<String> roles = user.getAuthorities()
+                .stream()
+                .map(authority ->
+                        authority.getAuthority().replace("ROLE_", "")
+                )
+                .toList();
+
+        String token = jwtService.generarToken(
+                user.getUsername(),
+                roles
+        );
 
         return new LoginResponse(token);
     }

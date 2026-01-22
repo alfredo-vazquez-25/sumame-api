@@ -17,6 +17,11 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     }
 
     @Override
+    public Usuario save(Usuario usuario) {
+        return jpaRepository.save(usuario);
+    }
+
+    @Override
     public Optional<Usuario> findByEmail(String email) {
         return jpaRepository.findByEmail(email);
     }
@@ -24,10 +29,5 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     @Override
     public Optional<Usuario> findById(Long id) {
         return jpaRepository.findById(id);
-    }
-
-    @Override
-    public Usuario save(Usuario usuario) {
-        return jpaRepository.save(usuario);
     }
 }

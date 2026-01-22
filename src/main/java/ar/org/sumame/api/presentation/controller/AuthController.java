@@ -4,6 +4,7 @@ import ar.org.sumame.api.security.CustomUserDetails;
 import ar.org.sumame.api.security.dto.LoginRequest;
 import ar.org.sumame.api.security.dto.LoginResponse;
 import ar.org.sumame.api.security.jwt.JwtService;
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

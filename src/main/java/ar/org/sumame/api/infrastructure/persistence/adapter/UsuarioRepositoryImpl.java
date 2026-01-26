@@ -30,4 +30,9 @@ public class UsuarioRepositoryImpl implements UsuarioRepository {
     public Optional<Usuario> findById(Long id) {
         return jpaRepository.findById(id);
     }
+
+    @Override
+    public void deleteAll() {
+        jpaRepository.deleteAll();
+    }
 }

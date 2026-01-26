@@ -3,16 +3,25 @@ package ar.org.sumame.api.security.jwt;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
+
+import static java.security.KeyRep.Type.SECRET;
 
 @Service
 public class JwtService {
 
     private static final String SECRET =
-            "sumame-api-super-secret-key-para-jwt-256-bits";
+            "sumame-api-super-secret-key-sumame-api-super-secret-key";
+
+    private static final SecretKey KEY =
+            Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
 
     private static final long EXPIRATION = 1000 * 60 * 60 * 4;
 
@@ -22,7 +31,7 @@ public class JwtService {
                 .claim("roles", roles)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET)
+                .signWith(KEY, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -30,17 +39,9 @@ public class JwtService {
         return getClaims(token).getSubject();
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> extraerRoles(String token) {
-        Object roles = getClaims(token).get("roles");
-
-        if (roles instanceof List<?>) {
-            return ((List<?>) roles)
-                    .stream()
-                    .map(Object::toString)
-                    .toList();
-        }
-
-        return List.of();
+        return (List<String>) getClaims(token).get("roles");
     }
 
     public boolean tokenValido(String token) {
@@ -53,9 +54,11 @@ public class JwtService {
     }
 
     private Claims getClaims(String token) {
-        return Jwts.parser()
-                .setSigningKey(SECRET)
+        return Jwts.parserBuilder()
+                .setSigningKey(KEY)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 }
+

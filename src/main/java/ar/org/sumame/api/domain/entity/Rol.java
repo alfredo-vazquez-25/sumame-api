@@ -13,14 +13,28 @@ import jakarta.persistence.Table;
 public class Rol extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
+    @Column(name = "codigo", nullable = false, unique = true)
+    private RolUsuario codigo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nombre", nullable = false, unique = true)
     private RolUsuario nombre;
 
-    public Rol() {
+    protected Rol() {
+        // JPA
     }
 
-    public Rol(RolUsuario nombre) {
-        this.nombre = nombre;
+    public Rol(RolUsuario value) {
+        this.codigo = value;
+        this.nombre = value;
+    }
+
+    public RolUsuario getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(RolUsuario codigo) {
+        this.codigo = codigo;
     }
 
     public RolUsuario getNombre() {
